@@ -9,7 +9,7 @@ all_dfs = []
 for log_file in os.listdir(base_path):
     if log_file.startswith('conn') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
-        df = log_to_df.create_dataframe(file_path)  # Load fully with zat
+        df = log_to_df.create_dataframe(file_path)  
         df['duration_seconds'] = df['duration'].dt.total_seconds()
         all_dfs.append(df)
 
