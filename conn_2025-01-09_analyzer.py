@@ -86,5 +86,4 @@ non_dns_hourly = combined_df[combined_df['id.resp_p'] != 53].resample('1h').size
 print("DNS hourly:", dns_hourly, sep='\n')
 print("Non-DNS hourly:", non_dns_hourly, sep='\n')
 
-# Add to each analyzer script (e.g., conn_2025-01-12_analyzer.py)
 combined_df.to_csv('jan9_baseline.csv')  # Repeat for Jan 9/11
