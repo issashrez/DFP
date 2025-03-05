@@ -10,19 +10,17 @@ for log_file in os.listdir(base_path):
     if log_file.startswith('dns') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
         if 'dns.12_00_00-00_00_00.log' in log_file:
-            # Sample big file - 50K rows
             df = pd.read_csv(file_path, sep='\t', comment='#', na_values='-', nrows=50000)
             with open(file_path, 'r') as f:
                 header = next(line for line in f if line.startswith('#fields'))
-            fields = header.strip().split('\t')[1:]  # Skip '#fields'
+            fields = header.strip().split('\t')[1:] 
             df.columns = fields
-            df.index = pd.to_datetime(df['ts'], unit='s')  # Set ts as index
-            if 'rtt' in df.columns:  # Convert rtt to seconds if present
+            df.index = pd.to_datetime(df['ts'], unit='s') 
+            if 'rtt' in df.columns:  
                 df['rtt'] = pd.to_timedelta(df['rtt']).dt.total_seconds()
         else:
-            # Load smaller files fully
             df = log_to_df.create_dataframe(file_path)
-            if 'rtt' in df.columns:  # Convert rtt to seconds
+            if 'rtt' in df.columns:  
                 df['rtt'] = df['rtt'].dt.total_seconds()
         if not df.empty:
             all_dfs.append(df)
