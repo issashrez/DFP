@@ -9,7 +9,7 @@ all_dfs = []
 for log_file in os.listdir(base_path):
     if log_file.startswith('weird') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
-        if os.path.getsize(file_path) > 1e9:  # >1 GB, sample 100K rows
+        if os.path.getsize(file_path) > 1e9:  
             df = log_to_df.create_dataframe(file_path, nrows=100000)
         else:
             df = log_to_df.create_dataframe(file_path)
