@@ -10,17 +10,14 @@ for log_file in os.listdir(base_path):
     if log_file.startswith('conn') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
         if 'conn.12_00_00-00_00_00.log' in log_file:
-            # Sample big file at read time
             df = pd.read_csv(file_path, sep='\t', comment='#', na_values='-', nrows=50000)
-            # Parse headers manually if needed (zat expects Zeek format)
             with open(file_path, 'r') as f:
                 header = next(line for line in f if line.startswith('#fields'))
-            fields = header.strip().split('\t')[1:]  # Skip '#fields'
+            fields = header.strip().split('\t')[1:]  
             df.columns = fields
-            df.index = pd.to_datetime(df['ts'], unit='s')  # Set ts as index
+            df.index = pd.to_datetime(df['ts'], unit='s') 
             df['duration'] = pd.to_timedelta(df['duration'])
         else:
-            # Load smaller files fully
             df = log_to_df.create_dataframe(file_path)
         df['duration_seconds'] = df['duration'].dt.total_seconds()
         all_dfs.append(df)
@@ -61,5 +58,4 @@ print("DNS durations:", dns_conns['duration_seconds'].describe(), sep='\n')
 short_non_dns = combined_df[(combined_df['duration_seconds'] < 1.0) & (combined_df['id.resp_p'] != 53)]
 print("Short non-DNS dest IPs:", short_non_dns['id.resp_h'].value_counts().head(5), sep='\n')
 
-# Add to each analyzer script (e.g., conn_2025-01-12_analyzer.py)
 combined_df.to_csv('jan11_baseline_sample.csv')  # Repeat for Jan 9/11
