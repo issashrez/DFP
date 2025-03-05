@@ -9,7 +9,7 @@ all_dfs = []
 for log_file in os.listdir(base_path):
     if log_file.startswith('ssl') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
-        if os.path.getsize(file_path) > 1e9:  # >1 GB, sample 100K rows
+        if os.path.getsize(file_path) > 1e9:  
             df = log_to_df.create_dataframe(file_path, nrows=100000)
         else:
             df = log_to_df.create_dataframe(file_path)
@@ -18,7 +18,7 @@ for log_file in os.listdir(base_path):
 
 combined_df = pd.concat(all_dfs, ignore_index=False) if all_dfs else pd.DataFrame()
 print("Shape:", combined_df.shape)
-print("Raw data sample:", combined_df.head(), sep='\n')  # Check fields
+print("Raw data sample:", combined_df.head(), sep='\n')  
 
 # Basic stats
 print("TLS Versions:", combined_df['version'].value_counts(), sep='\n')
@@ -37,7 +37,7 @@ print("Invalid certificate ratio per source IP per hour:", invalid_ratio.fillna(
 
 # Feature 2: Count of unusual cipher suites per source IP per hour (refined for weak ciphers)
 weak_ciphers = ['TLS_RSA_WITH_3DES_EDE_CBC_SHA', 'TLS_RSA_WITH_RC4_128_SHA', 
-                'TLS_RSA_WITH_DES_CBC_SHA']  # Weak/deprecated ciphers
+                'TLS_RSA_WITH_DES_CBC_SHA']  
 unusual_cipher_conns = combined_df[combined_df['cipher'].notna() & 
                                    combined_df['cipher'].isin(weak_ciphers)]
 unusual_cipher_counts = unusual_cipher_conns.groupby(['id.orig_h', pd.Grouper(freq='1h')]).size()
