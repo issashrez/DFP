@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from zat.log_to_dataframe import LogToDataFrame
 
-base_path = 'E:/net_log/zeek/extracted/2025-01-15/http/'  # Jan 15 CTF
+base_path = 'E:/net_log/zeek/extracted/2025-01-15/http/'  
 log_to_df = LogToDataFrame()
 all_dfs = []
 
@@ -10,7 +10,7 @@ for log_file in os.listdir(base_path):
     if log_file.startswith('http') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
         df = log_to_df.create_dataframe(file_path)
-        if not df.empty:  # Filter empty DataFrames
+        if not df.empty:  
             all_dfs.append(df)
 
 combined_df = pd.concat(all_dfs, ignore_index=False) if all_dfs else pd.DataFrame()
