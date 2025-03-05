@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from zat.log_to_dataframe import LogToDataFrame
 
-base_path = 'E:/net_log/zeek/extracted/2025-01-13/kerberos/'  # Update to 2025-01-15 later
+base_path = 'E:/net_log/zeek/extracted/2025-01-13/kerberos/' 
 log_to_df = LogToDataFrame()
 all_dfs = []
 
