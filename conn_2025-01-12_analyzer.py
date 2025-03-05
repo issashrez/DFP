@@ -9,14 +9,12 @@ all_dfs = []
 for log_file in os.listdir(base_path):
     if log_file.startswith('conn') and log_file.endswith('.log'):
         file_path = os.path.join(base_path, log_file)
-        # Sample both files - 50K rows each
         df = pd.read_csv(file_path, sep='\t', comment='#', na_values='-', nrows=50000)
-        # Parse Zeek headers
         with open(file_path, 'r') as f:
             header = next(line for line in f if line.startswith('#fields'))
-        fields = header.strip().split('\t')[1:]  # Skip '#fields'
+        fields = header.strip().split('\t')[1:]  
         df.columns = fields
-        df.index = pd.to_datetime(df['ts'], unit='s')  # Set ts as index
+        df.index = pd.to_datetime(df['ts'], unit='s')  
         df['duration'] = pd.to_timedelta(df['duration'])
         df['duration_seconds'] = df['duration'].dt.total_seconds()
         all_dfs.append(df)
@@ -51,7 +49,6 @@ print("Broadcast details:", broadcast_conns[['id.orig_h', 'proto', 'orig_bytes',
 failed_conns = combined_df[combined_df['conn_state'].isin(['S0', 'RSTO'])]
 print("Failed conn IPs:", failed_conns['id.orig_h'].value_counts(), sep='\n')
 
-# DNS vs. non-DNS
 dns_conns = combined_df[combined_df['id.resp_p'] == 53]
 print("DNS durations:", dns_conns['duration_seconds'].describe(), sep='\n')
 short_non_dns = combined_df[(combined_df['duration_seconds'] < 1.0) & (combined_df['id.resp_p'] != 53)]
